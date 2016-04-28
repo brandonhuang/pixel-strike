@@ -41,7 +41,7 @@ var lastX, lastY;
 function update() {
   updatePlayers();
   if(player) {
-    
+
   console.log(player.angle)
   }
 

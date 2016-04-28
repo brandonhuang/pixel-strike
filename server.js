@@ -3,8 +3,8 @@ var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var util = require('util');
-var gameloop = require('node-gameloop');
-var sockets = require('./sockets.js');
+var sockets = require('./sockets');
+var Game = require('./Game')
 
 app.use(express.static('public'));
 
@@ -17,12 +17,13 @@ http.listen(8000, function(){
   init();
 });
 
-var game = {};
+var game;
 var socket;
 
 function init() {
-  game.players = [];
-
+  game = Game();
   socket = sockets(io, game);
+
+  game.init(socket);
   socket.init();
 }

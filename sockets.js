@@ -3,8 +3,6 @@ var util = require('util');
 var helpers = require('./helpers');
 var playerById = helpers.playerById;
 
-var Player = require('./Player');
-
 function socketController(io, game) {
   function init() {
     io.on('connection', onConnect);
@@ -14,6 +12,11 @@ function socketController(io, game) {
     client.on("disconnect", onClientDisconnect);
     client.on("ready", onReady);
     client.on("start", onStart);
+    client.on("left", onLeft);
+    client.on("right", onLeft);
+    client.on("up", onLeft);
+    client.on("down", onLeft);
+    client.on("space", onLeft);
     client.on("move player", onMovePlayer);
   }
 
@@ -36,23 +39,39 @@ function socketController(io, game) {
   }
 
   function onStart() {
-    util.log("New player has connected: " + this.id);
-    var startX = Math.round(Math.random() * 2000);
-    var startY = Math.round(Math.random() * 2000);
-    var newPlayer = Player(startX, startY);
-    newPlayer.id = this.id;
+    var player = game.createPlayer(this.id);
+    this.player = player;
+    util.log("New player has connected: " + player.id);
 
     // Spawn player clientside with starting variables
-    io.to(this.id).emit("spawn", {x: startX, y: startY});
+    io.to(this.id).emit("spawn", {x: player.x, y: player.y, angle: player.angle});
 
     // Broadcast new player to all existing game.players
-    this.broadcast.emit("new player", {id: newPlayer.id, x: newPlayer.x, y: newPlayer.y});
+    this.broadcast.emit("new player", {id: player.id, x: player.x, y: player.y});
+  }
 
-    game.players.push(newPlayer);
+  function onLeft(bool) {
+    this.player.left(!!bool);
+  }
+
+  function onRight(bool) {
+    this.player.right(!!bool);
+  }
+
+  function onUp(bool) {
+    this.player.up = !!bool;
+  }
+
+  function onDown(bool) {
+    this.player.down = !!bool;
+  }
+
+  function onSpace(bool) {
+    this.player.space = !!bool;
   }
 
   function onMovePlayer(data) {
-    util.log("move", data)
+    // util.log("move", data)
     var movePlayer = playerById(this.id, game.players);
 
     if(!movePlayer) {
@@ -66,8 +85,13 @@ function socketController(io, game) {
     this.broadcast.emit("move player", {id: movePlayer.id, x: movePlayer.x, y: movePlayer.y});
   }
 
+  function movePlayer(player) {
+    io.sockets.emit("move", player);
+  }
+
   return {
-    init: init
+    init: init,
+    movePlayer: movePlayer
   }
 }
 

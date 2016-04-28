@@ -3,6 +3,7 @@ var setEventHandlers = function() {
   socket.on('spawn', onSpawn)
   socket.on('new player', onNewPlayer);
   socket.on('move player', onMovePlayer);
+  socket.on('move', function(data) {console.log(data)});
   socket.on('remove player', onRemovePlayer);
 }
 
@@ -20,7 +21,9 @@ function onDisconnect(data) {
 }
 
 function onSpawn(startCoords) {
+  console.log(startCoords)
   player = game.add.sprite(startCoords.x, startCoords.y, 'ship');
+  player.angle = startCoords.angle;
   player.anchor.setTo(0.5, 0.5);
 
   // Enable physics

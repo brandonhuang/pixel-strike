@@ -29,6 +29,7 @@ function create() {
   stars.fixedToCamera = true;
 
   cursors = game.input.keyboard.createCursorKeys();
+  cursors.space = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 
   // Tell server the client is ready
   socket.emit('ready');
@@ -39,6 +40,10 @@ var lastX, lastY;
 
 function update() {
   updatePlayers();
+  if(player) {
+    
+  console.log(player.angle)
+  }
 
   if(player) {
     if(cursors.left.isDown) {
@@ -54,6 +59,12 @@ function update() {
       if (currentSpeed > 0) {
         currentSpeed -= 4;
       }
+    }
+
+    // Shoot
+    if(cursors.space.isDown) {
+      console.log('shoot');
+      socket.emit('shoot', {x: player.x, y: player.y, angle: player.angle});
     }
 
     if(game.input.activePointer.isDown) {

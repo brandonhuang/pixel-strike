@@ -65,5 +65,5 @@ function onRemovePlayer(data) {
   removePlayer.player.kill();
 
   // Remove player from array
-  players.splice(enemies.indexOf(removePlayer), 1);
+  players.splice(players.indexOf(removePlayer), 1);
 }

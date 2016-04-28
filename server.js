@@ -21,7 +21,7 @@ var game;
 var socket;
 
 function init() {
-  game = Game();
+  game = new Game();
   socket = sockets(io, game);
 
   game.init(socket);

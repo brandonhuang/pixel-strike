@@ -13,11 +13,10 @@ function socketController(io, game) {
     client.on("ready", onReady);
     client.on("start", onStart);
     client.on("left", onLeft);
-    client.on("right", onLeft);
-    client.on("up", onLeft);
-    client.on("down", onLeft);
-    client.on("space", onLeft);
-    client.on("move player", onMovePlayer);
+    client.on("right", onRight);
+    client.on("up", onUp);
+    client.on("boost", onBoost);
+    client.on("shoot", onShoot);
   }
 
 
@@ -28,13 +27,13 @@ function socketController(io, game) {
       game.players.splice(game.players.indexOf(player), 1);
     }
 
-    this.broadcast.emit('remove player', {id: this.id});
+    this.broadcast.emit('remove player', this.id);
   }
 
   function onReady() {
     // Emit all current game.players to new player
     for (var i = 0; i < game.players.length; i++) {
-      io.to(this.id).emit("new player", {id: game.players[i].id, x: game.players[i].x, y: game.players[i].y});
+      io.to(this.id).emit("new player", game.players[i].public());
     };
   }
 
@@ -44,54 +43,79 @@ function socketController(io, game) {
     util.log("New player has connected: " + player.id);
 
     // Spawn player clientside with starting variables
-    io.to(this.id).emit("spawn", {x: player.x, y: player.y, angle: player.angle});
+    io.to(this.id).emit("spawn", player.public());
 
     // Broadcast new player to all existing game.players
-    this.broadcast.emit("new player", {id: player.id, x: player.x, y: player.y});
+    this.broadcast.emit("new player", player.public());
   }
 
   function onLeft(bool) {
-    this.player.left(!!bool);
+    this.player.left = !!bool;
   }
 
   function onRight(bool) {
-    this.player.right(!!bool);
+    this.player.right = !!bool;
   }
 
   function onUp(bool) {
     this.player.up = !!bool;
   }
 
-  function onDown(bool) {
-    this.player.down = !!bool;
+  function onBoost(bool) {
+    this.player.boost = !!bool;
   }
 
-  function onSpace(bool) {
-    this.player.space = !!bool;
+  function onShoot(bool) {
+    this.player.shoot = !!bool;
   }
 
-  function onMovePlayer(data) {
-    // util.log("move", data)
-    var movePlayer = playerById(this.id, game.players);
+  function newPlayer(player) {
 
-    if(!movePlayer) {
-      util.log('Player not found', this.id);
-      return;
-    }
-
-    movePlayer.x = data.x;
-    movePlayer.y = data.y;
-
-    this.broadcast.emit("move player", {id: movePlayer.id, x: movePlayer.x, y: movePlayer.y});
   }
 
-  function movePlayer(player) {
-    io.sockets.emit("move", player);
+  function updatePlayer(player) {
+    io.sockets.emit("update player", player);
+  }
+
+  function destroyPlayer(id) {
+    io.sockets.emit('destroy player', id);
+  }
+
+  function newBullet(bullet) {
+    io.sockets.emit("new bullet", bullet);
+  }
+
+  function updateBullet(bullet) {
+    io.sockets.emit('update bullet', bullet);
+  }
+
+  function destroyBullet(id) {
+    io.sockets.emit('destroy bullet', id);
+  }
+
+  function newPixel(pixel) {
+    io.sockets.emit("new pixel", {id: pixel.id, x: pixel.x, y: pixel.y, angle: pixel.angle, speed: pixel.speed});
+  }
+
+  function updatePixel(pixel) {
+    io.sockets.emit('update pixel', {id: pixel.id, x: pixel.x, y: pixel.y, angle: pixel.angle});
+  }
+
+  function destroyPixel(id) {
+    io.sockets.emit('destroy pixel', id);
   }
 
   return {
     init: init,
-    movePlayer: movePlayer
+    newPlayer: newPlayer,
+    updatePlayer: updatePlayer,
+    destroyPlayer: destroyPlayer,
+    newBullet: newBullet,
+    updateBullet: updateBullet,
+    destroyBullet: destroyBullet,
+    newPixel: newPixel,
+    updatePixel: updatePixel,
+    destroyPixel: destroyPixel
   }
 }
 

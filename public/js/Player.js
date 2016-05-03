@@ -29,47 +29,49 @@ var Player = function(game, player) {
 
   this.player.tint = hslToHex(this.health, 100, 60);
 
-  setInterval(function() {
-    new Trail(this.game, this.player.x, this.player.y, this.player.angle);
-  }.bind(this), 10);
+  // setInterval(function() {
+  //   new Trail(this.game, this.player.x, this.player.y, this.player.angle);
+  // }.bind(this), 60);
+
+  console.log('asdf');
 }
 
 var frames = 0;
 
 Player.prototype.update = function(player) {
-  var delta = this.game.time.elapsed / 1000;
+  // var delta = this.game.time.elapsed / 1000;
 
-  if(player) {
+  // if(player) {
     this.player.x = player.x;
     this.player.y = player.y;
-    this.speed = player.speed;
+    // this.speed = player.speed;
 
     this.player.angle = player.angle;
     this.health = player.health;
     this.player.tint = hslToHex(this.health, 100, 60);
-    return;
-  }
+    // return;
+  // }
 
-  if(this.left) {
-    this.player.angle -= this.rotationSpeed * delta;
-  } else if(this.right) {
-    this.player.angle += this.rotationSpeed * delta;
-  }
+  // if(this.left) {
+  //   this.player.angle -= this.rotationSpeed * delta;
+  // } else if(this.right) {
+  //   this.player.angle += this.rotationSpeed * delta;
+  // }
 
-  if(this.up) {
-    if(this.speed < this.maxSpeed) {
-      this.speed += this.acceleration * delta;
-    }
-  } else if(this.speed > this.cruiseSpeed) {
-    this.speed *= (1 - (this.drag * delta));
-  } else {
-    this.speed = this.cruiseSpeed;
-  }
+  // if(this.up) {
+  //   if(this.speed < this.maxSpeed) {
+  //     this.speed += this.acceleration * delta;
+  //   }
+  // } else if(this.speed > this.cruiseSpeed) {
+  //   this.speed *= (1 - (this.drag * delta));
+  // } else {
+  //   this.speed = this.cruiseSpeed;
+  // }
 
-  if(this.speed > 0) {
-    this.player.x += Math.cos(this.player.angle * Math.PI/180) * this.speed * delta;
-    this.player.y += Math.sin(this.player.angle * Math.PI/180) * this.speed * delta;
-  }
+  // if(this.speed > 0) {
+  //   this.player.x += Math.cos(this.player.angle * Math.PI/180) * this.speed * delta;
+  //   this.player.y += Math.sin(this.player.angle * Math.PI/180) * this.speed * delta;
+  // }
 
   // Update Camera
   this.cameraPos.x += (this.player.x - this.cameraPos.x) * this.lerp;

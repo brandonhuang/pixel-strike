@@ -26,7 +26,7 @@ Game.prototype.init = function(io) {
   // MAIN UPDATE LOOP
   this.renderLoop = gameloop.setGameLoop(function(delta) {
     this.updatePlayers(delta);
-  }.bind(this), 1000 / 60)
+  }.bind(this), 1000 / 65)
 
   this.physicsLoop = gameloop.setGameLoop(function(delta) {
     this.updateBullets(delta);

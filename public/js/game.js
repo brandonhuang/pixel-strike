@@ -43,7 +43,7 @@ var cameraPos = {};
 var lerp = 0.1;
 
 function update() {
-  updatePlayers();
+  // updatePlayers();
   updateBullets();
   updatePixels();
 

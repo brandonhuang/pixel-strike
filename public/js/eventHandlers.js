@@ -8,10 +8,10 @@ var setEventHandlers = function() {
   socket.on('remove player', onRemovePlayer);
   socket.on('new player', onNewPlayer);
 
-  socket.on('player up', onPlayerUp);
-  socket.on('player left', onPlayerLeft);
-  socket.on('player right', onPlayerRight);
-  socket.on('player shoot', onPlayerShoot);
+  // socket.on('player up', onPlayerUp);
+  // socket.on('player left', onPlayerLeft);
+  // socket.on('player right', onPlayerRight);
+  // socket.on('player shoot', onPlayerShoot);
 
   socket.on('destroy player', onDestroyPlayer);
   socket.on('new bullet', onNewBullet);
@@ -22,12 +22,12 @@ var setEventHandlers = function() {
   socket.on('destroy pixel', onDestroyPixel);
 }
 
-function onDisconnect(data) {
-  var removePlayer = playerById(data.id);
+function onDisconnect(id) {
+  var removePlayer = playerById(id);
 
   // Player not found
   if (!removePlayer) {
-    console.error('Player with', data.id, 'is not found!')
+    console.error('Player with', id, 'is not found!')
     return;
   }
 
@@ -35,9 +35,11 @@ function onDisconnect(data) {
   players.splice(players.indexOf(removePlayer), 1);
 }
 
-function onSpawn(player) {
-  console.log(player);
-  spawnPlayer = new Player(game, player);
+var firstLoad = true;
+
+function onSpawn(spawn) {
+  spawnPlayer = new Player(game, spawn);
+  player = spawnPlayer;
   players.push(spawnPlayer);
 
   // Camera follows player
@@ -46,7 +48,10 @@ function onSpawn(player) {
   cameraPos.x = player.x;
   cameraPos.y = player.y;
 
-  setUpdateHandlers();
+  if(firstLoad) {
+    setUpdateHandlers();
+    firstLoad = !firstLoad;
+  }
 }
 
 function onNewPlayer(player) {
@@ -62,7 +67,7 @@ function onUpdatePlayer(player) {
 }
 
 function onRemovePlayer(id) {
-  console.log('player left', player);
+  console.log('player left', id);
 
   var removePlayer = playerById(id);
 
@@ -78,25 +83,25 @@ function onRemovePlayer(id) {
   players.splice(players.indexOf(removePlayer), 1);
 }
 
-function onPlayerUp(player) {
-  var updatePlayer = playerById(player.id);
-  updatePlayer.up = player.bool;
-}
+// function onPlayerUp(player) {
+//   var updatePlayer = playerById(player.id);
+//   updatePlayer.up = player.bool;
+// }
 
-function onPlayerLeft(player) {
-  var updatePlayer = playerById(player.id);
-  updatePlayer.left = player.bool;
-}
+// function onPlayerLeft(player) {
+//   var updatePlayer = playerById(player.id);
+//   updatePlayer.left = player.bool;
+// }
 
-function onPlayerRight(player) {
-  var updatePlayer = playerById(player.id);
-  updatePlayer.right = player.bool;
-}
+// function onPlayerRight(player) {
+//   var updatePlayer = playerById(player.id);
+//   updatePlayer.right = player.bool;
+// }
 
-function onPlayerShoot(player) {
-  var updatePlayer = playerById(player.id);
-  updatePlayer.shoot = player.bool;
-}
+// function onPlayerShoot(player) {
+//   var updatePlayer = playerById(player.id);
+//   updatePlayer.shoot = player.bool;
+// }
 
 function onDestroyPlayer(id) {
   var destroyPlayer = playerById(id);

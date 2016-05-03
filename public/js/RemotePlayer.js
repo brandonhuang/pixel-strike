@@ -23,26 +23,26 @@ var RemotePlayer = function(game, player) {
 
   this.player.anchor.setTo(0.5, 0.5);
 
-  this.player.name = id.toString();
+  this.player.name = player.id.toString();
 
-  setInterval(function() {
-    new Trail(this.game, this.player.x, this.player.y, this.player.angle);
-  }.bind(this), 60);
+  // setInterval(function() {
+  //   new Trail(this.game, this.player.x, this.player.y, this.player.angle);
+  // }.bind(this), 60);
 }
 
 RemotePlayer.prototype.update = function(player) {
-  var delta = this.game.time.elapsed / 1000;
+  // var delta = this.game.time.elapsed / 1000;
 
-  if(player) {
+  // if(player) {
     this.player.x = player.x;
     this.player.y = player.y;
-    this.speed = player.speed;
+    // this.speed = player.speed;
 
     this.player.angle = player.angle;
     this.health = player.health;
     this.player.tint = hslToHex(this.health, 100, 60);
-    return;
-  }
+    // return;
+  // }
 
   // if(this.left) {
   //   this.player.angle -= this.rotationSpeed * delta;

@@ -23,10 +23,6 @@ function socketController(io, game) {
 
   function onClientDisconnect() {
     util.log("Player has disconnected: " + this.id);
-    var player = playerById(this.id, game.players);
-    if(player) {
-      game.players.splice(game.players.indexOf(player), 1);
-    }
 
     this.broadcast.emit('remove player', this.id);
   }

@@ -45,13 +45,13 @@ Player.prototype.public = function() {
     x: this.x,
     y: this.y,
     angle: this.angle,
-    rotationSpeed: this.rotationSpeed,
+    // rotationSpeed: this.rotationSpeed,
     health: this.health,
-    speed: this.speed,
-    cruiseSpeed: this.cruiseSpeed,
-    maxSpeed: this.maxSpeed,
-    acceleration: this.acceleration,
-    drag: this.drag
+    // speed: this.speed,
+    // cruiseSpeed: this.cruiseSpeed,
+    // maxSpeed: this.maxSpeed,
+    // acceleration: this.acceleration,
+    // drag: this.drag
   };
 }
 

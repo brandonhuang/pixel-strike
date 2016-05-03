@@ -29,11 +29,9 @@ var Player = function(game, player) {
 
   this.player.tint = hslToHex(this.health, 100, 60);
 
-  // setInterval(function() {
-  //   new Trail(this.game, this.player.x, this.player.y, this.player.angle);
-  // }.bind(this), 60);
-
-  console.log('asdf');
+  setInterval(function() {
+    new Trail(this.game, this.player.x, this.player.y, this.player.angle, this.player.tint);
+  }.bind(this), 60);
 }
 
 var frames = 0;

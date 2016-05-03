@@ -25,7 +25,7 @@ function preload() {
 
 function create() {
   setEventHandlers();
-  setKeys();
+  updateLeaderboard();
 
   // Set world bounds
   game.world.setBounds(0, 0, 2000, 2000);
@@ -36,7 +36,6 @@ function create() {
 
   // Tell server the client is ready
   socket.emit('ready');
-  socket.emit('start');
 }
 
 var cameraPos = {};
@@ -139,3 +138,34 @@ function emitShootStart() {
 function emitShootStop() { 
   socket.emit('shoot', false);
 }
+
+// UI STUFFS
+
+function startGame() { 
+  socket.emit('start');
+  hideStartScreen();
+}
+
+function displayStartScreen() {
+  document.getElementById('start-screen').style.display = 'block';
+}
+
+function hideStartScreen() {
+  document.getElementById('start-screen').style.display = 'none';
+}
+
+function updateLeaderboard() {
+  var leaders = players.concat().sort(function(a, b) {
+    return parseFloat(a.health) - parseFloat(b.health);
+  });
+  document.getElementById('leaders').innerHTML = '';
+  for(var i = 0; i < 5; i++) {
+    if(leaders[i]) {
+      document.getElementById('leaders').innerHTML += `<li>${leaders[i].id} ${leaders[i].health}</li>`;
+    }
+  }
+}
+
+setInterval(function() {
+  updateLeaderboard();
+}, 3000);

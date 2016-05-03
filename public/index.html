@@ -8,16 +8,28 @@
 		
 		<link rel="stylesheet" href="style/reset.css">
 		<link rel="stylesheet" href="style/game.css">
+		<!-- <script src="https://code.jquery.com/jquery-2.2.3.min.js"></script> -->
 		<script src="/socket.io/socket.io.js"></script>
 	</head>
 	
 	<body>
+		<div id="ui">
+			<div id="start-screen">
+				<input type="text" placeholder="nickname">
+				<button onClick="startGame()">Play</button>
+			</div>
+			<div id="leaderboard">
+				<h2>Leaderboard</h2>
+				<ul id="leaders">
+				</ul>
+			</div>
+		</div>
 		<script src="js/phaser.min.js"></script>
 		<script src="js/helpers.js"></script>
 		<script src="js/Bullet.js"></script>
 		<script src="js/RemotePlayer.js"></script>
 		<script src="js/Player.js"></script>
-		<!-- <script src="js/Trail.js"></script> -->
+		<script src="js/Trail.js"></script>
 		<script src="js/Pixel.js"></script>
 		<script src="js/eventHandlers.js"></script>
 		<script src="js/game.js"></script>

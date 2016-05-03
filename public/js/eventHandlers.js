@@ -1,8 +1,5 @@
-var setUpdateHandlers = function() {
-  socket.on('update player', onUpdatePlayer);
-}
-
 var setEventHandlers = function() {
+  socket.on('update player', onUpdatePlayer);
   socket.on('disconnect', onDisconnect);
   socket.on('spawn', onSpawn)
   socket.on('remove player', onRemovePlayer);
@@ -49,7 +46,7 @@ function onSpawn(spawn) {
   cameraPos.y = player.y;
 
   if(firstLoad) {
-    setUpdateHandlers();
+    setKeys();
     firstLoad = !firstLoad;
   }
 }
@@ -112,7 +109,7 @@ function onDestroyPlayer(id) {
 
   // If the destroyed player is the player controlled ship, respawn;
   if(destroyPlayer === player) {
-    socket.emit('start');
+    displayStartScreen();
   }
 
   destroyPlayer.player.kill();

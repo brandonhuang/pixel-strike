@@ -1,5 +1,6 @@
 var gameloop = require('node-gameloop');
 var util = require('util');
+var helper = require('./helpers');
 
 var Player = require('./Player');
 var Bullet = require('./Bullet');
@@ -44,6 +45,11 @@ Game.prototype.init = function(io) {
 }
 
 Game.prototype.createPlayer = function(id) {
+  if(helper.playerById(id, this.players)) {
+    console.log(id, "already exists");
+    return;
+  }
+
   var newPlayer = new Player(id, this);
   this.players.push(newPlayer);
 

@@ -6,7 +6,8 @@
   "dependencies": {
     "express": "^4.10.2",
     "node-gameloop": "^0.1.0",
-    "socket.io": "^1.4.5"
+    "socket.io": "^1.4.5",
+    "tower-uuid": "^0.1.0"
   },
   "devDependencies": {
     "flightplan": "^0.6.13"

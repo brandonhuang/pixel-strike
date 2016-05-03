@@ -15,6 +15,7 @@ function socketController(io, game) {
     client.on("left", onLeft);
     client.on("right", onRight);
     client.on("up", onUp);
+    client.on("down", onDown);
     client.on("boost", onBoost);
     client.on("shoot", onShoot);
   }
@@ -51,14 +52,21 @@ function socketController(io, game) {
 
   function onLeft(bool) {
     this.player.left = !!bool;
+    // io.sockets.emit("player left", {id: this.id, bool: !!bool});
   }
 
   function onRight(bool) {
     this.player.right = !!bool;
+    // io.sockets.emit("player right", {id: this.id, bool: !!bool});
   }
 
   function onUp(bool) {
     this.player.up = !!bool;
+    // io.sockets.emit("player up", {id: this.id, bool: !!bool});
+  }
+
+  function onDown(bool) {
+    this.player.down = !!bool;
   }
 
   function onBoost(bool) {
@@ -67,6 +75,7 @@ function socketController(io, game) {
 
   function onShoot(bool) {
     this.player.shoot = !!bool;
+    // io.sockets.emit("player shoot", {id: this.id, bool: !!bool});
   }
 
   function newPlayer(player) {
@@ -94,11 +103,11 @@ function socketController(io, game) {
   }
 
   function newPixel(pixel) {
-    io.sockets.emit("new pixel", {id: pixel.id, x: pixel.x, y: pixel.y, angle: pixel.angle, speed: pixel.speed});
+    io.sockets.emit("new pixel", pixel);
   }
 
   function updatePixel(pixel) {
-    io.sockets.emit('update pixel', {id: pixel.id, x: pixel.x, y: pixel.y, angle: pixel.angle});
+    io.sockets.emit('update pixel', pixel);
   }
 
   function destroyPixel(id) {

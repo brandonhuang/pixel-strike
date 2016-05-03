@@ -1,33 +1,34 @@
-var acceleration = 100;
-var minSpeed = 0; 
-var maxSpeed = 300;
-var maxRotation = 200;
-var drag = 400;
-var shootDelay = 0.05; // in seconds
-var pixels = 0;
-
 function Player(id, game) {
   this.game = game;
 
   this.left = false;
   this.right = false;
   this.up = false;
+  this.down = false;
   this.boost = false;
   this.shoot = false;
 
+  this.id = id;
   this.x = Math.random() * 2000;
   this.y = Math.random() * 2000;
-  this.width = 16;
-  this.height = 16;
+  this.width = 18;
+  this.height = 18;
   this.anchorX = 0.5;
   this.anchorY = 0.5;
   this.angle = Math.random() * 360 - 180;
-  this.id = id;
-  this.speed = minSpeed;
+  this.rotationSpeed = 175;
+
+  this.cruiseSpeed = 150;
+  this.maxSpeed = 300;
+  this.speed = this.cruiseSpeed;
+  this.acceleration = 300;
+  this.drag = 0.9;
+
   this.health = 50;
-  this.shootDelay = shootDelay;
-  this.shootTime = shootDelay;
-  this.pixels = pixels;
+  this.pixels = 0;
+  
+  this.shootDelay = 0.15;
+  this.shootTime = this.shootDelay;
 
   this.getX = function() {
     return this.x - this.width * this.anchorX;
@@ -44,22 +45,44 @@ Player.prototype.public = function() {
     x: this.x,
     y: this.y,
     angle: this.angle,
-    health: this.health
+    rotationSpeed: this.rotationSpeed,
+    health: this.health,
+    speed: this.speed,
+    cruiseSpeed: this.cruiseSpeed,
+    maxSpeed: this.maxSpeed,
+    acceleration: this.acceleration,
+    drag: this.drag
   };
 }
 
 Player.prototype.update = function(delta) {
   if(this.left) {
-    this.angle -= maxRotation * delta;
+    this.angle -= this.rotationSpeed * delta;
   } else if(this.right) {
-    this.angle += maxRotation * delta;
+    this.angle += this.rotationSpeed * delta;
   }
 
   if(this.up) {
-    this.speed = maxSpeed;
-  } else if(this.speed > minSpeed) {
-    this.speed -= drag * delta;
+    if(this.speed < this.maxSpeed) {
+      this.speed += this.acceleration * delta;
+    }
+  } else if(this.speed > this.cruiseSpeed) {
+    this.speed *= (1 - (this.drag * delta));
+  } else {
+    this.speed = this.cruiseSpeed;
   }
+
+  // if(this.down && this.speed > minSpeed) {
+  //   this.speed *= (1 - (drag * delta));
+  // } else if(this.down) {
+  //   this.speed = minSpeed;
+  // } else if(this.up) {
+  //   this.speed = maxSpeed;
+  // } else if(this.speed < cruiseSpeed) {
+  //   this.speed = cruiseSpeed;
+  // } else if(this.speed > cruiseSpeed) {
+  //   this.speed *= (1 - (drag * delta));
+  // }
 
   this.shootTime += delta;
   if(this.shoot) {
@@ -83,6 +106,9 @@ Player.prototype.reduceHealth = function(damage) {
   this.health -= damage;
   if(this.health <= 0) {
     this.game.destroyPlayer(this.id);
+    for(var i = 0; i < 50; i++) {
+      this.game.createPixel(this.id, this.x, this.y, 1);
+    }
   }
 }
 

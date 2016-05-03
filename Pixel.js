@@ -1,23 +1,26 @@
+var uuid = require('tower-uuid');
+
 var initialSpeed = 100;
 var drag = 0.5;
-var lifetime = 30; // in seconds
+var lifetime = 60; // in seconds
 var immunity = 1; // in seconds
 
-function Pixel(game, pid, x, y) {
+function Pixel(game, pid, x, y, hue) {
   this.game = game;
 
   this.x = x;
   this.y = y;
-  this.width = 2;
-  this.height = 2;
+  this.width = 16;
+  this.height = 16;
   this.speed = Math.random() * 50 + 50;
   this.immunity = 1;
   this.angle = Math.random() * 360 - 180;
   this.anchorX = 0.5;
   this.anchorY = 0.5;
-  this.id = new Date();
+  this.id = uuid();
   this.pid = pid;
   this.age = 0;
+  this.hue = hue;
 
   this.getX = function() {
     return this.x - this.width * this.anchorX;
@@ -34,15 +37,16 @@ Pixel.prototype.public = function() {
     x: this.x,
     y: this.y,
     angle: this.angle,
-    speed: this.speed
+    speed: this.speed,
+    hue: this.hue
   };
 }
 
 Pixel.prototype.update = function(delta) {
-  if(this.speed > 1) {
+  if(this.speed > 5) {
     this.x += Math.cos(this.angle * Math.PI/180) * this.speed * delta;
     this.y += Math.sin(this.angle * Math.PI/180) * this.speed * delta;
-    this.speed = this.speed * (1 - (drag * delta));
+    this.speed *= (1 - (drag * delta));
   } else {
     this.speed = 0;
   }

@@ -20,6 +20,7 @@ function preload() {
   game.load.image('bullet', 'assets/bullet.png');
   game.load.image('stars', 'assets/stars.gif');
   game.load.image('pixel', 'assets/pixel.png');
+  game.load.image('trail', 'assets/trail.png');
 }
 
 function create() {
@@ -42,42 +43,12 @@ var cameraPos = {};
 var lerp = 0.1;
 
 function update() {
+  updatePlayers();
   updateBullets();
   updatePixels();
 
-  //   // Shoot
-  //   if(cursors.space.isDown) {
-  //     console.log('shoot');
-  //     socket.emit('shoot', {x: player.x, y: player.y, angle: player.angle});
-  //   }
-
-  //   if(game.input.activePointer.isDown) {
-  //     if(game.physics.arcade.distanceToPointer(player) >= 10) {
-  //       currentSpeed = 300;
-
-  //       player.rotation = game.physics.arcade.angleToPointer(player);
-  //     }
-  //   }
-
-
-  //   game.physics.arcade.velocityFromRotation(player.rotation, currentSpeed, player.body.velocity)
-
-
-  //   // Send location data to server if player is moving
-  //   if(lastX !== player.x || lastY !== player.y) {
-  //     socket.emit('move player', {x: player.x, y: player.y});
-  //   }
-
-  //   lastX = player.x;
-  //   lastY = player.y;
-  // }
-  if(player) {
-    // cameraPos.x += (player.player.x - cameraPos.x) * lerp;
-    // cameraPos.y += (player.player.y - cameraPos.y) * lerp;
-    // game.camera.focusOnXY(cameraPos.x, cameraPos.y);
-    stars.tilePosition.x = -game.camera.x
-    stars.tilePosition.y = -game.camera.y
-  }
+  stars.tilePosition.x = -game.camera.x
+  stars.tilePosition.y = -game.camera.y
 }
 
 function updatePlayers() {
@@ -101,6 +72,7 @@ function updatePixels() {
 function setKeys() {
   keys.left = game.input.keyboard.addKey(Phaser.Keyboard.A);
   keys.right = game.input.keyboard.addKey(Phaser.Keyboard.D);
+  keys.down = game.input.keyboard.addKey(Phaser.Keyboard.S);
   keys.up = game.input.keyboard.addKey(Phaser.Keyboard.W);
   keys.boost = game.input.keyboard.addKey(Phaser.Keyboard.SHIFT);
   keys.shoot = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
@@ -111,6 +83,8 @@ function setKeys() {
   keys.right.onUp.add(emitRightStop, this);
   keys.up.onDown.add(emitUpStart, this);
   keys.up.onUp.add(emitUpStop, this);
+  keys.down.onDown.add(emitDownStart, this);
+  keys.down.onUp.add(emitDownStop, this);
   keys.boost.onDown.add(emitBoostStart, this);
   keys.boost.onUp.add(emitBoostStop, this);
   keys.shoot.onDown.add(emitShootStart, this);
@@ -140,6 +114,14 @@ function emitUpStart() {
 
 function emitUpStop() {
   socket.emit('up', false);
+}
+
+function emitDownStart() {
+  socket.emit('down', true);
+}
+
+function emitDownStop() {
+  socket.emit('down', false);
 }
 
 function emitBoostStart() {

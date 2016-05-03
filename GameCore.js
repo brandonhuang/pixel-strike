@@ -18,6 +18,11 @@ function Game() {
 Game.prototype.init = function(io) {
   this.io = io;
 
+  // CLIENT SYNC LOOP
+  // gameloop.setGameLoop(function(delta) {
+  //   this.syncPlayers();
+  // }.bind(this), 1000 / 60);
+
   // MAIN UPDATE LOOP
   this.renderLoop = gameloop.setGameLoop(function(delta) {
     this.updatePlayers(delta);
@@ -32,7 +37,10 @@ Game.prototype.init = function(io) {
 
   gameloop.setGameLoop(function(delta) {
     util.log("players:", this.players.length, "bullets", this.bullets.length, "pixels", this.pixels.length);
-  }.bind(this), 5000);
+    // for(var i = 0; i < this.pixels.length; i++) {
+    //   console.log(this.pixels[i].x, this.pixels[i].y);
+    // }
+  }.bind(this), 10000);
 }
 
 Game.prototype.createPlayer = function(id) {
@@ -45,6 +53,12 @@ Game.prototype.createPlayer = function(id) {
 Game.prototype.updatePlayers = function(delta) {
   for(var i = 0; i < this.players.length; i++) {
     this.players[i].update(delta);
+    this.io.updatePlayer(this.players[i].public());
+  }
+}
+
+Game.prototype.syncPlayers = function(delta) {
+  for(var i = 0; i < this.players.length; i++) {
     this.io.updatePlayer(this.players[i].public());
   }
 }
@@ -82,10 +96,10 @@ Game.prototype.destroyBullet = function(id) {
   }
 }
 
-Game.prototype.createPixel = function(pid, x, y) {
-  var newPixel = new Pixel(this, pid, x, y);
+Game.prototype.createPixel = function(pid, x, y, hue) {
+  var newPixel = new Pixel(this, pid, x, y, hue);
   this.pixels.push(newPixel);
-  this.io.newPixel(newPixel);
+  this.io.newPixel(newPixel.public());
 
   return newPixel;
 }
@@ -104,7 +118,6 @@ Game.prototype.destroyPixel = function(id) {
     }
   }
 }
-
 
 Game.prototype.checkCollisions = function(objects1, objects2) {
   for(var i = 0; i < objects1.length; i++) {

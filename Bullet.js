@@ -1,4 +1,6 @@
-var speed = 400; 
+var uuid = require('tower-uuid');
+
+var speed = 500; 
 var drag = 0;
 var lifetime = 2.5; // in seconds
 
@@ -12,11 +14,11 @@ function Bullet(game, pid, x, y, angle) {
   this.angle = angle;
   this.anchorX = 0.5;
   this.anchorY = 0.5;
-  this.id = new Date();
+  this.id = uuid();
   this.pid = pid;
   this.speed = speed;
   this.age = 0;
-  this.damage = 1;
+  this.damage = 5;
 
   this.getX = function() {
     return this.x - this.width * this.anchorX;
@@ -52,8 +54,10 @@ Bullet.prototype.collide = function(col) {
     // console.log('friendly collide');
   } else {
     this.game.destroyBullet(this.id);
-    this.game.createPixel(col.id, col.x, col.y);
     col.reduceHealth(this.damage);
+    for(var i = 0; i < this.damage; i++) {
+      this.game.createPixel(col.id, col.x, col.y, col.health);
+    }
   }
 }
 

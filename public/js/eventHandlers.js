@@ -7,6 +7,12 @@ var setEventHandlers = function() {
   socket.on('spawn', onSpawn)
   socket.on('remove player', onRemovePlayer);
   socket.on('new player', onNewPlayer);
+
+  socket.on('player up', onPlayerUp);
+  socket.on('player left', onPlayerLeft);
+  socket.on('player right', onPlayerRight);
+  socket.on('player shoot', onPlayerShoot);
+
   socket.on('destroy player', onDestroyPlayer);
   socket.on('new bullet', onNewBullet);
   socket.on('update bullet', onUpdateBullet);
@@ -29,24 +35,24 @@ function onDisconnect(data) {
   players.splice(players.indexOf(removePlayer), 1);
 }
 
-function onSpawn(data) {
-  console.log(data);
-  player = new Player(data.id, game, data.x, data.y, data.angle, data.health);
-  players.push(player);
+function onSpawn(player) {
+  console.log(player);
+  spawnPlayer = new Player(game, player);
+  players.push(spawnPlayer);
 
   // Camera follows player
   // game.camera.follow(player.player);
   // game.camera.focusOnXY(0, 0);
-  cameraPos.x = data.x;
-  cameraPos.y = data.y;
+  cameraPos.x = player.x;
+  cameraPos.y = player.y;
 
   setUpdateHandlers();
 }
 
-function onNewPlayer(data) {
-  console.log('new player connected', data);
+function onNewPlayer(player) {
+  console.log('new player connected', player);
 
-  var newPlayer = new RemotePlayer(data.id, game, data.x, data.y, data.angle, data.health);
+  var newPlayer = new RemotePlayer(game, player);
   players.push(newPlayer);
 }
 
@@ -70,6 +76,26 @@ function onRemovePlayer(id) {
 
   // Remove player from array
   players.splice(players.indexOf(removePlayer), 1);
+}
+
+function onPlayerUp(player) {
+  var updatePlayer = playerById(player.id);
+  updatePlayer.up = player.bool;
+}
+
+function onPlayerLeft(player) {
+  var updatePlayer = playerById(player.id);
+  updatePlayer.left = player.bool;
+}
+
+function onPlayerRight(player) {
+  var updatePlayer = playerById(player.id);
+  updatePlayer.right = player.bool;
+}
+
+function onPlayerShoot(player) {
+  var updatePlayer = playerById(player.id);
+  updatePlayer.shoot = player.bool;
 }
 
 function onDestroyPlayer(id) {
@@ -112,8 +138,7 @@ function onDestroyBullet(id) {
 }
 
 function onNewPixel(pixel) {
-  console.log(pixel);
-  var newPixel = new Pixel(pixel.id, game, pixel.x, pixel.y, pixel.angle, pixel.speed);
+  var newPixel = new Pixel(pixel.id, game, pixel.x, pixel.y, pixel.angle, pixel.speed, pixel.hue);
   pixels.push(newPixel);
 }
 

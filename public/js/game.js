@@ -116,19 +116,19 @@ function emitUpStop() {
 }
 
 function emitDownStart() {
-  socket.emit('down', true);
+  // socket.emit('down', true);
 }
 
 function emitDownStop() {
-  socket.emit('down', false);
+  // socket.emit('down', false);
 }
 
 function emitBoostStart() {
-  socket.emit('boost', true);
+  // socket.emit('boost', true);
 }
 
 function emitBoostStop() {
-  socket.emit('boost', false);
+  // socket.emit('boost', false);
 }
 
 function emitShootStart() {
@@ -142,7 +142,7 @@ function emitShootStop() {
 // UI STUFFS
 
 function startGame() { 
-  socket.emit('start');
+  socket.emit('start', document.getElementById('nick').value);
   hideStartScreen();
 }
 
@@ -161,7 +161,7 @@ function updateLeaderboard() {
   document.getElementById('leaders').innerHTML = '';
   for(var i = 0; i < 5; i++) {
     if(leaders[i]) {
-      document.getElementById('leaders').innerHTML += `<li>${leaders[i].id} ${leaders[i].health}</li>`;
+      document.getElementById('leaders').innerHTML += `<li>${leaders[i].player.name} ${leaders[i].health}</li>`;
     }
   }
 }

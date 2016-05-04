@@ -9,8 +9,8 @@ function Bullet(game, pid, x, y, angle) {
 
   this.x = x;
   this.y = y;
-  this.width = 2;
-  this.height = 2;
+  this.width = 3;
+  this.height = 3;
   this.angle = angle;
   this.anchorX = 0.5;
   this.anchorY = 0.5;
@@ -18,7 +18,7 @@ function Bullet(game, pid, x, y, angle) {
   this.pid = pid;
   this.speed = speed;
   this.age = 0;
-  this.damage = 5;
+  this.damage = 1;
 
   this.getX = function() {
     return this.x - this.width * this.anchorX;

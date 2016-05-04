@@ -1,18 +1,19 @@
-function Player(id, game) {
+function Player(id, name, game) {
   this.game = game;
 
   this.left = false;
   this.right = false;
   this.up = false;
   this.down = false;
-  this.boost = false;
   this.shoot = false;
 
   this.id = id;
+  this.name = name;
+
   this.x = Math.random() * 2000;
   this.y = Math.random() * 2000;
-  this.width = 18;
-  this.height = 18;
+  this.width = 20;
+  this.height = 20;
   this.anchorX = 0.5;
   this.anchorY = 0.5;
   this.angle = Math.random() * 360 - 180;
@@ -20,14 +21,15 @@ function Player(id, game) {
 
   this.cruiseSpeed = 150;
   this.maxSpeed = 300;
+  this.maxBoostDuration = 1;
+  this.boost = 1;
   this.speed = this.cruiseSpeed;
   this.acceleration = 300;
-  this.drag = 0.9;
+  this.drag = 0.95;
 
-  this.health = 50;
-  this.pixels = 0;
+  this.health = 1;
   
-  this.shootDelay = 0.15;
+  this.shootDelay = 0.5;
   this.shootTime = this.shootDelay;
 
   this.getX = function() {
@@ -47,6 +49,7 @@ Player.prototype.public = function() {
     angle: this.angle,
     // rotationSpeed: this.rotationSpeed,
     health: this.health,
+    name: this.name,
     // speed: this.speed,
     // cruiseSpeed: this.cruiseSpeed,
     // maxSpeed: this.maxSpeed,
@@ -62,14 +65,23 @@ Player.prototype.update = function(delta) {
     this.angle += this.rotationSpeed * delta;
   }
 
-  if(this.up) {
+  if(this.up && this.boost > 0) {
+    this.boost -= delta;
     if(this.speed < this.maxSpeed) {
       this.speed += this.acceleration * delta;
     }
-  } else if(this.speed > this.cruiseSpeed) {
-    this.speed *= (1 - (this.drag * delta));
   } else {
-    this.speed = this.cruiseSpeed;
+    if(this.boost < this.maxBoostDuration) {
+      this.boost += 0.35 * delta;
+    } else {
+      this.boost = this.maxBoostDuration;
+    }
+
+    if(this.speed > this.cruiseSpeed) {
+      this.speed *= (1 - (this.drag * delta));
+    } else {
+      this.speed = this.cruiseSpeed;
+    }
   }
 
   // if(this.down && this.speed > minSpeed) {
@@ -99,23 +111,28 @@ Player.prototype.update = function(delta) {
 }
 
 Player.prototype.collide = function(col) {
-  util.log(this.id, 'collided with', col.id);
+  this.game.destroyPlayer(this.id);
+  this.game.destroyPlayer(col.id);
+}
+
+Player.prototype.kill = function() {
+  
 }
 
 Player.prototype.reduceHealth = function(damage) {
   this.health -= damage;
   if(this.health <= 0) {
     this.game.destroyPlayer(this.id);
-    for(var i = 0; i < 50; i++) {
-      this.game.createPixel(this.id, this.x, this.y, 1);
-    }
   }
 }
 
-Player.prototype.collectPixel = function() { 
-  if(this.health < 300) {
+Player.prototype.collectPixel = function() {
+  if(this.health < 320) {
     this.health++;
   }
+
+  this.maxSpeed = 250 + this.health / 2;
+  this.shootDelay = 0.5 - this.health / 500;
 }
 
 module.exports = Player;

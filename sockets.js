@@ -15,8 +15,8 @@ function socketController(io, game) {
     client.on("left", onLeft);
     client.on("right", onRight);
     client.on("up", onUp);
-    client.on("down", onDown);
-    client.on("boost", onBoost);
+    // client.on("down", onDown);
+    // client.on("boost", onBoost);
     client.on("shoot", onShoot);
   }
 
@@ -39,8 +39,8 @@ function socketController(io, game) {
     };
   }
 
-  function onStart() {
-    var player = game.createPlayer(this.id);
+  function onStart(name) {
+    var player = game.createPlayer(this.id, name);
     if(!player) {
       console.log('player could not be creared');
       return;
@@ -71,13 +71,13 @@ function socketController(io, game) {
     // io.sockets.emit("player up", {id: this.id, bool: !!bool});
   }
 
-  function onDown(bool) {
-    this.player.down = !!bool;
-  }
+  // function onDown(bool) {
+  //   this.player.down = !!bool;
+  // }
 
-  function onBoost(bool) {
-    this.player.boost = !!bool;
-  }
+  // function onBoost(bool) {
+  //   this.player.boost = !!bool;
+  // }
 
   function onShoot(bool) {
     this.player.shoot = !!bool;
@@ -118,6 +118,10 @@ function socketController(io, game) {
 
   function destroyPixel(id) {
     io.sockets.emit('destroy pixel', id);
+  }
+
+  function outOfBounds(id) {
+    io.sockets.emit('outOfBounds', id);
   }
 
   return {

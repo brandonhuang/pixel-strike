@@ -20,25 +20,27 @@ var Player = function(game, player) {
   this.cameraPos = {x: player.x, y: player.y};
   this.lerp = 0.1;
 
-  // this.player.animations.add('move', [0, 1, 2, 3, 4, 5, 6, 7], 20, true);
-  // this.player.animations.add('stop', [3], 20, true);
+  var style = { font: "12px Arial", fill: "white",  align: "center", backgroundColor: "transparent" };
+  this.text = game.add.text(0, 0, player.name, style);
+  this.text.anchor.setTo(0.5, 0.5);
 
   this.player.anchor.setTo(0.5, 0.5);
 
-  this.player.name = player.id.toString();
+  this.player.name = player.name.toString();
 
   this.player.tint = hslToHex(this.health, 100, 60);
 
   setInterval(function() {
     new Trail(this.game, this.player.x, this.player.y, this.player.angle, this.player.tint);
-  }.bind(this), 60);
+  }.bind(this), 200);
 }
 
 var frames = 0;
 
 Player.prototype.update = function(player) {
   // var delta = this.game.time.elapsed / 1000;
-
+    this.text.x = this.player.x;
+    this.text.y = this.player.y - 20;
   // if(player) {
     this.player.x = player.x;
     this.player.y = player.y;

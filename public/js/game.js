@@ -18,7 +18,7 @@ game = new Phaser.Game(window.innerWidth, window.innerHeight, Phaser.AUTO, '', {
 function preload() {
   game.load.image('ship', 'assets/ship.png');
   game.load.image('bullet', 'assets/bullet.png');
-  game.load.image('stars', 'assets/stars.gif');
+  game.load.image('stars', 'assets/stars.png');
   game.load.image('pixel', 'assets/pixel.png');
   game.load.image('trail', 'assets/trail.png');
 }
@@ -141,9 +141,11 @@ function emitShootStop() {
 
 // UI STUFFS
 
-function startGame() { 
-  socket.emit('start', document.getElementById('nick').value);
-  hideStartScreen();
+function startGame(e) {
+  if (e.keyCode == 13) {
+    socket.emit('start', document.getElementById('nick').value.slice(0, 7));
+    hideStartScreen();
+  }
 }
 
 function displayStartScreen() {
@@ -156,12 +158,12 @@ function hideStartScreen() {
 
 function updateLeaderboard() {
   var leaders = players.concat().sort(function(a, b) {
-    return parseFloat(a.health) - parseFloat(b.health);
+    return parseFloat(b.health) - parseFloat(a.health);
   });
   document.getElementById('leaders').innerHTML = '';
   for(var i = 0; i < 5; i++) {
     if(leaders[i]) {
-      document.getElementById('leaders').innerHTML += `<li>${leaders[i].player.name} ${leaders[i].health}</li>`;
+      document.getElementById('leaders').innerHTML += `<li style="color: ${leaders[i].player.tint.replace('0x', '#')}">${leaders[i].player.name} <span class="score">${leaders[i].health}</span></li>`;
     }
   }
 }

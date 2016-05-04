@@ -1,5 +1,6 @@
 body {
 	overflow: hidden;
+  font-family: "proxima-nova-soft", sans-serif;
 }
 
 canvas {
@@ -13,15 +14,42 @@ canvas {
 }
 
 #start-screen {
+  box-sizing: border-box;
   position: absolute;
-  top: 45%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  top: 0;
+  left: 0;
+  /*transform: translate(-50%, -50%);*/
   color: white;
-  width: 800px;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.25);
+  padding-top: 20vh;
 }
 
 #start-screen input, #start-screen button {
+  display: block;
+  margin: 0 auto;
+}
+
+#start-screen input {
+  text-align: center;
+  width: 100px;
+  font-size: 1.2em;
+  background-color: transparent;
+  border: 2px solid white;
+  border-radius: 50px;
+  padding: 5px 10px;
+  color: white;
+  font-family: "proxima-nova-soft", sans-serif;
+}
+
+#start-screen input:focus {
+  outline: none;
+  border-color: yellow;
+}
+
+#start-screen img {
+  width: 80%;
   display: block;
   margin: 0 auto;
 }
@@ -31,4 +59,9 @@ canvas {
   right: 0;
   color: white;
   margin: 20px;
+}
+
+#leaderboard .score {
+  float: right;
+  padding: 0 0 0 10px;
 }

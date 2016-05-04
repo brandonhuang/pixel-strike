@@ -27,9 +27,9 @@ function Player(id, name, game) {
   this.acceleration = 300;
   this.drag = 0.95;
 
-  this.health = 1;
+  this.health = 5;
   
-  this.shootDelay = 0.5;
+  this.shootDelay = 0.4;
   this.shootTime = this.shootDelay;
 
   this.getX = function() {
@@ -111,16 +111,26 @@ Player.prototype.update = function(delta) {
 }
 
 Player.prototype.collide = function(col) {
-  this.game.destroyPlayer(this.id);
-  this.game.destroyPlayer(col.id);
+  if(col.health > this.health) {
+    this.reduceHealth(this.health);
+    col.reduceHealth(this.health);
+  } else {
+    this.reduceHealth(col.health);
+    col.reduceHealth(col.health);
+  }
 }
 
 Player.prototype.kill = function() {
-  
+  // for(var i = 0; i < this.health; i++) {
+  //   this.game.createPixel(this.id, this.x, this.y, this.health);
+  // }
 }
 
 Player.prototype.reduceHealth = function(damage) {
   this.health -= damage;
+  for(var i = 0; i < damage; i++) {
+    this.game.createPixel(this.id, this.x, this.y, this.health);
+  }
   if(this.health <= 0) {
     this.game.destroyPlayer(this.id);
   }
@@ -132,7 +142,7 @@ Player.prototype.collectPixel = function() {
   }
 
   this.maxSpeed = 250 + this.health / 2;
-  this.shootDelay = 0.5 - this.health / 500;
+  this.shootDelay = 0.4 - this.health / 500;
 }
 
 module.exports = Player;

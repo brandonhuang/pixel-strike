@@ -1,5 +1,4 @@
 var setEventHandlers = function() {
-  socket.on('update player', onUpdatePlayer);
   socket.on('disconnect', onDisconnect);
   socket.on('spawn', onSpawn)
   socket.on('remove player', onRemovePlayer);
@@ -47,6 +46,7 @@ function onSpawn(spawn) {
 
   if(firstLoad) {
     setKeys();
+    socket.on('update player', onUpdatePlayer);
     firstLoad = !firstLoad;
   }
 }
@@ -74,6 +74,8 @@ function onRemovePlayer(id) {
     return;
   }
 
+  clearInterval(removePlayer.trailSpawner);
+  removePlayer.text.kill();
   removePlayer.player.kill();
 
   // Remove player from array
@@ -112,6 +114,8 @@ function onDestroyPlayer(id) {
     displayStartScreen();
   }
 
+  clearInterval(destroyPlayer.trailSpawner);
+  destroyPlayer.text.kill();
   destroyPlayer.player.kill();
   players.splice(players.indexOf(destroyPlayer), 1);
 }

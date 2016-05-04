@@ -10,18 +10,20 @@
 		<link rel="stylesheet" href="style/game.css">
 		<!-- <script src="https://code.jquery.com/jquery-2.2.3.min.js"></script> -->
 		<script src="/socket.io/socket.io.js"></script>
+		<script src="https://use.typekit.net/ksm8eqv.js"></script>
+		<script>try{Typekit.load({ async: true });}catch(e){}</script>
 	</head>
 	
 	<body>
 		<div id="ui">
 			<div id="start-screen">
-				<input id="nick" type="text" placeholder="nickname">
-				<button onClick="startGame()">Play</button>
+				<img src="assets/logo.png" alt="PXLSTRIKE">
+				<input id="nick" type="text" placeholder="name" onkeydown="startGame(event)">
 			</div>
 			<div id="leaderboard">
-				<h2>Leaderboard</h2>
-				<ul id="leaders">
-				</ul>
+				<!-- <h2>Leaderboard</h2> -->
+				<ol id="leaders">
+				</ol>
 			</div>
 		</div>
 		<script src="js/phaser.min.js"></script>

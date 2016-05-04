@@ -18,7 +18,7 @@ var RemotePlayer = function(game, player) {
   this.player = game.add.sprite(player.x, player.y, 'ship');
   this.player.angle = player.angle;
 
-   var style = { font: "10px Arial", fill: "white",  align: "center", backgroundColor: "transparent" };
+  var style = { font: "12px proxima-nova-soft", fill: "white",  align: "center", backgroundColor: "transparent" };
   this.text = game.add.text(0, 0, player.name, style);
   this.text.anchor.setTo(0.5, 0.5);
 
@@ -28,14 +28,15 @@ var RemotePlayer = function(game, player) {
 
   this.player.tint = hslToHex(this.health, 100, 60);
 
-  setInterval(function() {
+  this.trailSpawner = setInterval(function() {
     new Trail(this.game, this.player.x, this.player.y, this.player.angle, this.player.tint);
-  }.bind(this), 200);
+  }.bind(this), 125);
 }
 
 RemotePlayer.prototype.update = function(player) {
   // var delta = this.game.time.elapsed / 1000;
-
+    this.text.x = this.player.x;
+    this.text.y = this.player.y - 20;
   // if(player) {
     this.player.x = player.x;
     this.player.y = player.y;

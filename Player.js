@@ -21,8 +21,8 @@ function Player(id, name, game) {
 
   this.cruiseSpeed = 150;
   this.maxSpeed = 300;
-  this.maxBoostDuration = 1;
-  this.boost = 1;
+  this.maxBoostDuration = 2;
+  this.boost = 2;
   this.speed = this.cruiseSpeed;
   this.acceleration = 300;
   this.drag = 0.95;
@@ -113,9 +113,9 @@ Player.prototype.update = function(delta) {
 Player.prototype.collide = function(col) {
   if(col.health > this.health) {
     this.reduceHealth(this.health);
-    col.reduceHealth(this.health);
+    col.reduceHealth(Math.round(col.health / 2));
   } else {
-    this.reduceHealth(col.health);
+    this.reduceHealth(Math.round(this.health / 2));
     col.reduceHealth(col.health);
   }
 }

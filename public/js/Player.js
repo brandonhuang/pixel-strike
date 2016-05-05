@@ -20,7 +20,7 @@ var Player = function(game, player) {
   this.cameraPos = {x: player.x, y: player.y};
   this.lerp = 0.1;
 
-  var style = { font: "12px Arial", fill: "white",  align: "center", backgroundColor: "transparent" };
+  var style = { font: "12px proxima-nova-soft", fill: "white",  align: "center", backgroundColor: "transparent" };
   this.text = game.add.text(0, 0, player.name, style);
   this.text.anchor.setTo(0.5, 0.5);
 

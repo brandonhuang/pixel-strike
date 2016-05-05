@@ -143,13 +143,14 @@ function emitShootStop() {
 
 function startGame(e) {
   if (e.keyCode == 13) {
-    socket.emit('start', document.getElementById('nick').value.slice(0, 7));
+    socket.emit('start', document.getElementById('nick').value.slice(0, 10));
     hideStartScreen();
   }
 }
 
 function displayStartScreen() {
   document.getElementById('start-screen').style.display = 'block';
+  document.getElementById('nick').focus();
 }
 
 function hideStartScreen() {

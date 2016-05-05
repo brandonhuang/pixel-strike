@@ -59,6 +59,11 @@ canvas {
   right: 0;
   color: white;
   margin: 20px;
+  font-size: 1.3em;
+}
+
+#leaderboard li {
+  margin: 3px 0;
 }
 
 #leaderboard .score {

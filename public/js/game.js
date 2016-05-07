@@ -13,7 +13,7 @@ socket.on('connect', function() {
   console.log('Socket connection started!');
 });
 
-game = new Phaser.Game(window.innerWidth, window.innerHeight, Phaser.AUTO, '', { preload: preload, create: create, update: update });
+game = new Phaser.Game('100%', '100%', Phaser.AUTO, '', { preload: preload, create: create, update: update, resize: resize});
 
 function preload() {
   game.load.image('ship', 'assets/ship.png');
@@ -21,6 +21,10 @@ function preload() {
   game.load.image('stars', 'assets/stars.png');
   game.load.image('pixel', 'assets/pixel.png');
   game.load.image('trail', 'assets/trail.png');
+
+  game.scale.scaleMode = Phaser.ScaleManager.RESIZE;
+  game.scale.pageAlignVertically = true;
+  game.scale.pageAlignHorizontally = true;
 }
 
 function create() {
@@ -36,6 +40,11 @@ function create() {
 
   // Tell server the client is ready
   socket.emit('ready');
+}
+
+function resize() {
+  stars.height = window.innerHeight;
+  stars.width = window.innerWidth;
 }
 
 var cameraPos = {};

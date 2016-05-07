@@ -142,7 +142,7 @@ Player.prototype.collectPixel = function() {
   }
 
   this.maxSpeed = 250 + this.health / 2;
-  this.shootDelay = 0.4 - this.health / 500;
+  this.shootDelay = 0.4 - this.health / 1000;
 }
 
 module.exports = Player;

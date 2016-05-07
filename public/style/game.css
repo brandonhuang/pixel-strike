@@ -70,3 +70,12 @@ canvas {
   float: right;
   padding: 0 0 0 10px;
 }
+
+#version {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  color: rgba(225,225,225, 0.5);
+  font-size: 0.9em;
+  margin: 5px;
+}

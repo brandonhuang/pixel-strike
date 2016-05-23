@@ -108,8 +108,8 @@ Game.prototype.destroyBullet = function(id) {
   }
 }
 
-Game.prototype.createPixel = function(pid, x, y, hue) {
-  var newPixel = new Pixel(this, pid, x, y, hue);
+Game.prototype.createPixel = function(pid, x, y, hue, health) {
+  var newPixel = new Pixel(this, pid, x, y, hue, health);
   this.pixels.push(newPixel);
   this.io.newPixel(newPixel.public());
 

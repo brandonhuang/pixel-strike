@@ -18,7 +18,8 @@ function Bullet(game, pid, x, y, angle) {
   this.pid = pid;
   this.speed = speed;
   this.age = 0;
-  this.damage = 3;
+  this.minDamage = 2;
+  this.damagePercent = 0.10;
 
   this.getX = function() {
     return this.x - this.width * this.anchorX;
@@ -54,7 +55,12 @@ Bullet.prototype.collide = function(col) {
     // console.log('friendly collide');
   } else {
     this.game.destroyBullet(this.id);
-    col.reduceHealth(this.damage);
+
+    if((col.health * this.damagePercent) > this.minDamage) {
+      col.reduceHealth(Math.round(col.health * this.damagePercent));
+    } else {
+      col.reduceHealth(this.minDamage);
+    }
   }
 }
 

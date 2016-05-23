@@ -127,18 +127,25 @@ Player.prototype.kill = function() {
 }
 
 Player.prototype.reduceHealth = function(damage) {
-  this.health -= damage;
-  for(var i = 0; i < damage; i++) {
-    this.game.createPixel(this.id, this.x, this.y, this.health);
+  if((this.health - damage) > 0) {
+    this.game.createPixel(this.id, this.x, this.y, this.health, damage);
+  } else {
+    for(var i = 0; i < damage; i++) {
+      this.game.createPixel(this.id, this.x, this.y, 1, 1);
+    }
   }
+
+  this.health -= damage;
+
   if(this.health <= 0) {
     this.game.destroyPlayer(this.id);
   }
 }
 
-Player.prototype.collectPixel = function() {
-  if(this.health < 320) {
-    this.health++;
+Player.prototype.collectPixel = function(health) {
+  this.health += health;
+  if(this.health > 320) {
+    this.health = 320;
   }
 
   this.maxSpeed = 250 + this.health / 2;

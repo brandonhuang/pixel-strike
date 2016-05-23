@@ -3,9 +3,9 @@ var uuid = require('tower-uuid');
 var initialSpeed = 100;
 var drag = 0.5;
 var lifetime = 60; // in seconds
-var immunity = 1; // in seconds
+var immunity = 0.5; // in seconds
 
-function Pixel(game, pid, x, y, hue) {
+function Pixel(game, pid, x, y, hue, health) {
   this.game = game;
 
   this.x = x;
@@ -21,6 +21,7 @@ function Pixel(game, pid, x, y, hue) {
   this.pid = pid;
   this.age = 0;
   this.hue = hue;
+  this.health = health;
 
   this.getX = function() {
     return this.x - this.width * this.anchorX;
@@ -64,8 +65,8 @@ Pixel.prototype.update = function(delta) {
 
 Pixel.prototype.collide = function(col) {
   if(this.immunity <= 0) {
+    col.collectPixel(this.health);
     this.game.destroyPixel(this.id);
-    col.collectPixel();
   }
 }
 

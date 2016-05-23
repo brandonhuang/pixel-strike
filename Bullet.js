@@ -1,16 +1,66 @@
-function Bullet(startX, startY, angle) {
-  var x = startX;
-  var y = startY;
-  var angle = angle;
-  var velocity = 4;
-  var id;
+var uuid = require('tower-uuid');
 
+var speed = 500; 
+var drag = 0;
+var lifetime = 2.5; // in seconds
+
+function Bullet(game, pid, x, y, angle) {
+  this.game = game;
+
+  this.x = x;
+  this.y = y;
+  this.width = 3;
+  this.height = 3;
+  this.angle = angle;
+  this.anchorX = 0.5;
+  this.anchorY = 0.5;
+  this.id = uuid();
+  this.pid = pid;
+  this.speed = speed;
+  this.age = 0;
+  this.minDamage = 2;
+  this.damagePercent = 0.10;
+
+  this.getX = function() {
+    return this.x - this.width * this.anchorX;
+  };
+
+  this.getY = function() {
+    return this.y - this.height * this.anchorY;
+  }
+}
+
+Bullet.prototype.public = function() {
   return {
-    x: x,
-    y: y,
-    angle: angle,
-    velocity: velocity,
-    id: id
+    id: this.id,
+    x: this.x,
+    y: this.y,
+    angle: this.angle,
+    speed: this.speed
+  }
+}
+
+Bullet.prototype.update = function(delta) {
+  this.x += Math.cos(this.angle * Math.PI/180) * this.speed * delta;
+  this.y += Math.sin(this.angle * Math.PI/180) * this.speed * delta;
+  this.age += delta;
+
+  if(this.age > lifetime) {
+    this.game.destroyBullet(this.id);
+  }
+}
+
+Bullet.prototype.collide = function(col) {
+  if(this.pid === col.id) {
+    // console.log('friendly collide');
+  } else {
+    this.game.destroyBullet(this.id);
+
+    if((col.health * this.damagePercent) > this.minDamage) {
+      col.reduceHealth(Math.round(col.health * this.damagePercent));
+    } else {
+      col.reduceHealth(this.minDamage);
+    }
   }
 }
 

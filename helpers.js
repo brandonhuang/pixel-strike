@@ -6,5 +6,13 @@ module.exports = {
       }
     }
     return false;
+  },
+  bulletById: function(id, bullets) {
+    for (var i = 0; i < bullets.length; i++) {
+      if (bullets[i].id === id) {
+        return bullets[i];
+      }
+    }
+    return false;
   }
 }

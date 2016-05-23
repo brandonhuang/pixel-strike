@@ -2,8 +2,10 @@ var socket = io(); // Socket connection
 var stars;
 var player;
 var players = [];
+var bullets = [];
+var pixels = [];
 var currentSpeed = 0;
-var cursors;
+var keys = {};
 var startCoords = {};
 var game;
 
@@ -11,16 +13,24 @@ socket.on('connect', function() {
   console.log('Socket connection started!');
 });
 
-game = new Phaser.Game(window.innerWidth, window.innerHeight, Phaser.AUTO, '', { preload: preload, create: create, update: update });
+game = new Phaser.Game('100%', '100%', Phaser.AUTO, '', { preload: preload, create: create, update: update, resize: resize});
 
 function preload() {
   game.load.image('ship', 'assets/ship.png');
-  game.load.image('stars', 'assets/stars.gif');
+  game.load.image('bullet', 'assets/bullet.png');
+  game.load.image('stars', 'assets/stars.png');
+  game.load.image('pixel', 'assets/pixel.png');
+  game.load.image('trail', 'assets/trail.png');
+
+  game.scale.scaleMode = Phaser.ScaleManager.RESIZE;
+  game.scale.pageAlignVertically = true;
+  game.scale.pageAlignHorizontally = true;
 }
 
 function create() {
   setEventHandlers();
-  
+  updateLeaderboard();
+
   // Set world bounds
   game.world.setBounds(0, 0, 2000, 2000);
 
@@ -28,72 +38,146 @@ function create() {
   stars = game.add.tileSprite(0, 0, window.innerWidth, window.innerHeight, 'stars');
   stars.fixedToCamera = true;
 
-  cursors = game.input.keyboard.createCursorKeys();
-  cursors.space = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-
   // Tell server the client is ready
   socket.emit('ready');
-  socket.emit('start');
 }
 
-var lastX, lastY;
+function resize() {
+  stars.height = window.innerHeight;
+  stars.width = window.innerWidth;
+}
+
+var cameraPos = {};
+var lerp = 0.1;
 
 function update() {
-  updatePlayers();
-  if(player) {
-    
-  console.log(player.angle)
-  }
+  // updatePlayers();
+  updateBullets();
+  updatePixels();
 
-  if(player) {
-    if(cursors.left.isDown) {
-      player.angle -= 4;
-    } else if(cursors.right.isDown) {
-      player.angle += 4;
-    }
-
-    if(cursors.up.isDown) {
-      // The speed we'll travel at
-      currentSpeed = 300;
-    } else {
-      if (currentSpeed > 0) {
-        currentSpeed -= 4;
-      }
-    }
-
-    // Shoot
-    if(cursors.space.isDown) {
-      console.log('shoot');
-      socket.emit('shoot', {x: player.x, y: player.y, angle: player.angle});
-    }
-
-    if(game.input.activePointer.isDown) {
-      if(game.physics.arcade.distanceToPointer(player) >= 10) {
-        currentSpeed = 300;
-
-        player.rotation = game.physics.arcade.angleToPointer(player);
-      }
-    }
-
-    stars.tilePosition.x = -game.camera.x
-    stars.tilePosition.y = -game.camera.y
-
-    game.physics.arcade.velocityFromRotation(player.rotation, currentSpeed, player.body.velocity)
-
-
-    // Send location data to server if player is moving
-    if(lastX !== player.x || lastY !== player.y) {
-      socket.emit('move player', {x: player.x, y: player.y});
-    }
-
-    lastX = player.x;
-    lastY = player.y;
-  }
+  stars.tilePosition.x = -game.camera.x
+  stars.tilePosition.y = -game.camera.y
 }
 
 function updatePlayers() {
-  for (var i = 0; i < players.length; i++) {
+  for(var i = 0; i < players.length; i++) {
     players[i].update();
-    game.physics.arcade.collide(player, players[i].player);
   }
 }
+
+function updateBullets() {
+  for(var i = 0; i < bullets.length; i++) {
+    bullets[i].update();
+  }
+}
+
+function updatePixels() {
+  for(var i = 0; i < pixels.length; i++) {
+    pixels[i].update();
+  }
+}
+
+function setKeys() {
+  keys.left = game.input.keyboard.addKey(Phaser.Keyboard.A);
+  keys.right = game.input.keyboard.addKey(Phaser.Keyboard.D);
+  keys.down = game.input.keyboard.addKey(Phaser.Keyboard.S);
+  keys.up = game.input.keyboard.addKey(Phaser.Keyboard.W);
+  keys.boost = game.input.keyboard.addKey(Phaser.Keyboard.SHIFT);
+  keys.shoot = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+
+  keys.left.onDown.add(emitLeftStart, this);
+  keys.left.onUp.add(emitLeftStop, this);
+  keys.right.onDown.add(emitRightStart, this);
+  keys.right.onUp.add(emitRightStop, this);
+  keys.up.onDown.add(emitUpStart, this);
+  keys.up.onUp.add(emitUpStop, this);
+  keys.down.onDown.add(emitDownStart, this);
+  keys.down.onUp.add(emitDownStop, this);
+  keys.boost.onDown.add(emitBoostStart, this);
+  keys.boost.onUp.add(emitBoostStop, this);
+  keys.shoot.onDown.add(emitShootStart, this);
+  keys.shoot.onUp.add(emitShootStop, this);
+}
+
+// Server input functions
+function emitLeftStart() {
+  socket.emit('left', true);
+}
+
+function emitLeftStop() {
+  socket.emit('left', false);
+}
+
+function emitRightStart() {
+  socket.emit('right', true);
+}
+
+function emitRightStop() {
+  socket.emit('right', false);
+}
+
+function emitUpStart() {
+  socket.emit('up', true);
+}
+
+function emitUpStop() {
+  socket.emit('up', false);
+}
+
+function emitDownStart() {
+  // socket.emit('down', true);
+}
+
+function emitDownStop() {
+  // socket.emit('down', false);
+}
+
+function emitBoostStart() {
+  // socket.emit('boost', true);
+}
+
+function emitBoostStop() {
+  // socket.emit('boost', false);
+}
+
+function emitShootStart() {
+  socket.emit('shoot', true);
+}
+
+function emitShootStop() { 
+  socket.emit('shoot', false);
+}
+
+// UI STUFFS
+
+function startGame(e) {
+  if (e.keyCode == 13) {
+    socket.emit('start', document.getElementById('nick').value.slice(0, 10));
+    hideStartScreen();
+  }
+}
+
+function displayStartScreen() {
+  document.getElementById('start-screen').style.display = 'block';
+  document.getElementById('nick').focus();
+}
+
+function hideStartScreen() {
+  document.getElementById('start-screen').style.display = 'none';
+}
+
+function updateLeaderboard() {
+  var leaders = players.concat().sort(function(a, b) {
+    return parseFloat(b.health) - parseFloat(a.health);
+  });
+  document.getElementById('leaders').innerHTML = '';
+  for(var i = 0; i < 5; i++) {
+    if(leaders[i]) {
+      document.getElementById('leaders').innerHTML += `<li style="color: ${leaders[i].player.tint.replace('0x', '#')}">${leaders[i].player.name} <span class="score">${leaders[i].health}</span></li>`;
+    }
+  }
+}
+
+setInterval(function() {
+  updateLeaderboard();
+}, 3000);

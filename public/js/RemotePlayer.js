@@ -1,4 +1,4 @@
-var Player = function(game, player) {
+var RemotePlayer = function(game, player) {
   this.game = game;
   this.id = player.id;
   this.health = player.health;
@@ -17,8 +17,6 @@ var Player = function(game, player) {
 
   this.player = game.add.sprite(player.x, player.y, 'ship');
   this.player.angle = player.angle;
-  this.cameraPos = {x: player.x, y: player.y};
-  this.lerp = 0.1;
 
   var style = { font: "12px proxima-nova-soft", fill: "white",  align: "center", backgroundColor: "transparent" };
   this.text = game.add.text(0, 0, player.name, style);
@@ -35,9 +33,7 @@ var Player = function(game, player) {
   }.bind(this), 125);
 }
 
-var frames = 0;
-
-Player.prototype.update = function(player) {
+RemotePlayer.prototype.update = function(player) {
   // var delta = this.game.time.elapsed / 1000;
     this.text.x = this.player.x;
     this.text.y = this.player.y - 20;
@@ -72,18 +68,4 @@ Player.prototype.update = function(player) {
   //   this.player.x += Math.cos(this.player.angle * Math.PI/180) * this.speed * delta;
   //   this.player.y += Math.sin(this.player.angle * Math.PI/180) * this.speed * delta;
   // }
-
-  // Update Camera
-  this.cameraPos.x += (this.player.x - this.cameraPos.x) * this.lerp;
-  this.cameraPos.y += (this.player.y - this.cameraPos.y) * this.lerp;
-  this.game.camera.focusOnXY(this.cameraPos.x, this.cameraPos.y);
-
-  frames++;
 }
-
-setInterval(function() {
-  var fps = frames / 10;
-  console.log(fps);
-
-  frames = 0;
-}, 10000);

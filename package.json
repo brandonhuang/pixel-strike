@@ -6,11 +6,14 @@
   "dependencies": {
     "express": "^4.10.2",
     "node-gameloop": "^0.1.0",
-    "socket.io": "^1.4.5"
+    "socket.io": "^1.4.5",
+    "tower-uuid": "^0.1.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "flightplan": "^0.6.13"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon server.js"
   },
   "author": "",
   "license": "ISC"

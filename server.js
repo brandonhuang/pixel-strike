@@ -3,10 +3,10 @@ var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var util = require('util');
-var gameloop = require('node-gameloop');
-var sockets = require('./sockets.js');
+var sockets = require('./sockets');
+var Game = require('./GameCore');
 
-app.use(express.static('public'));
+app.use(express.static(__dirname + '/public'));
 
 app.get('/', function(req, res){
   res.sendFile(__dirname + '/public/index.html');
@@ -17,12 +17,13 @@ http.listen(8000, function(){
   init();
 });
 
-var game = {};
+var game;
 var socket;
 
 function init() {
-  game.players = [];
-
+  game = new Game();
   socket = sockets(io, game);
+
+  game.init(socket);
   socket.init();
 }

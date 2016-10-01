@@ -1,0 +1,6 @@
+- incrase pickip radius
+- stop listening to keys on death
+- pixel shed constant, health per pixel not
+- instructions
+- link to chatnon
+- make channels share levels again

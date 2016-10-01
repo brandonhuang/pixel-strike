@@ -12,6 +12,10 @@ app.get('/', function(req, res){
   res.sendFile(__dirname + '/public/index.html');
 });
 
+app.get('/link', function(req, res){
+  res.sendFile(__dirname + '/public/link.html');
+});
+
 http.listen(80, function(){
   console.log('listening on *:80');
   init();

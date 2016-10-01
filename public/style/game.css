@@ -79,3 +79,16 @@ canvas {
   font-size: 0.9em;
   margin: 5px;
 }
+
+#chatnon {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  color: rgba(225,225,225, 0.5);
+  font-size: 0.9em;
+  margin: 5px;
+}
+
+#chatnon:hover {
+	color: rgba(225,225,225, 0.8);
+}

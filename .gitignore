@@ -2,3 +2,4 @@ flightplan.js
 node_modules/
 /assets/
 .DS_Store
+npm-debug.log

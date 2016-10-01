@@ -28,7 +28,7 @@ function Player(id, name, game) {
   this.drag = 0.95;
 
   this.health = 5;
-  
+
   this.shootDelay = 0.4;
   this.shootTime = this.shootDelay;
 
@@ -128,9 +128,11 @@ Player.prototype.kill = function() {
 
 Player.prototype.reduceHealth = function(damage) {
   if((this.health - damage) > 0) {
-    this.game.createPixel(this.id, this.x, this.y, this.health, damage);
-  } else {
     for(var i = 0; i < damage; i++) {
+      this.game.createPixel(this.id, this.x, this.y, 1, 1);
+    }
+  } else {
+    for(var i = 0; i < this.health; i++) {
       this.game.createPixel(this.id, this.x, this.y, 1, 1);
     }
   }

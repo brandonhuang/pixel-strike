@@ -12,8 +12,8 @@ app.get('/', function(req, res){
   res.sendFile(__dirname + '/public/index.html');
 });
 
-http.listen(8000, function(){
-  console.log('listening on *:8000');
+http.listen(80, function(){
+  console.log('listening on *:80');
   init();
 });
 

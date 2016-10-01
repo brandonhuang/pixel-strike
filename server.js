@@ -3,8 +3,8 @@ var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var util = require('util');
-var sockets = require('./sockets');
-var Game = require('./GameCore');
+var sockets = require('../game/sockets');
+var Game = require('../game/game_core');
 
 app.use(express.static(__dirname + '/public'));
 

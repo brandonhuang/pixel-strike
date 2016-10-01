@@ -1,10 +1,10 @@
 var gameloop = require('node-gameloop');
 var util = require('util');
-var helper = require('./helpers');
+var helper = require('../helpers/helpers');
 
-var Player = require('./Player');
-var Bullet = require('./Bullet');
-var Pixel = require('./Pixel');
+var Player = require('../objects/Player');
+var Bullet = require('../objects/Bullet');
+var Pixel = require('../objects/Pixel');
 
 function Game() {
   this.players = [];
@@ -18,11 +18,6 @@ function Game() {
 
 Game.prototype.init = function(io) {
   this.io = io;
-
-  // CLIENT SYNC LOOP
-  // gameloop.setGameLoop(function(delta) {
-  //   this.syncPlayers();
-  // }.bind(this), 1000 / 60);
 
   // MAIN UPDATE LOOP
   this.renderLoop = gameloop.setGameLoop(function(delta) {
@@ -43,9 +38,6 @@ Game.prototype.init = function(io) {
 
   gameloop.setGameLoop(function(delta) {
     util.log("players:", this.players.length, "bullets", this.bullets.length, "pixels", this.pixels.length);
-    // for(var i = 0; i < this.pixels.length; i++) {
-    //   console.log(this.pixels[i].x, this.pixels[i].y);
-    // }
   }.bind(this), 10000);
 }
 

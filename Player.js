@@ -128,8 +128,14 @@ Player.prototype.kill = function() {
 
 Player.prototype.reduceHealth = function(damage) {
   if((this.health - damage) > 0) {
-    for(var i = 0; i < damage; i++) {
-      this.game.createPixel(this.id, this.x, this.y, 1, 1);
+    if(this.damage > 5) {
+      for(var i = 0; i < 5; i++) {
+        this.game.createPixel(this.id, this.x, this.y, this.hue, Math.round(damage / 5));
+      }
+    } else {
+      for(var i = 0; i < damage; i++) {
+        this.game.createPixel(this.id, this.x, this.y, 1, 1);
+      }
     }
   } else {
     for(var i = 0; i < this.health; i++) {

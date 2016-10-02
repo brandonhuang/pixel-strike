@@ -37,6 +37,7 @@ function onSpawn(spawn) {
   spawnPlayer = new Player(game, spawn);
   player = spawnPlayer;
   players.push(spawnPlayer);
+  setKeys();
 
   // Camera follows player
   // game.camera.follow(player.player);
@@ -45,7 +46,6 @@ function onSpawn(spawn) {
   cameraPos.y = player.y;
 
   if(firstLoad) {
-    setKeys();
     socket.on('update player', onUpdatePlayer);
     firstLoad = !firstLoad;
   }
@@ -111,6 +111,7 @@ function onDestroyPlayer(id) {
 
   // If the destroyed player is the player controlled ship, respawn;
   if(destroyPlayer === player) {
+    unsetKeys();
     displayStartScreen();
   }
 

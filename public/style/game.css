@@ -48,10 +48,22 @@ canvas {
   border-color: yellow;
 }
 
-#start-screen img {
-  width: 80%;
+#start-screen #logo {
+  width: 50%;
   display: block;
   margin: 0 auto;
+}
+
+#start-screen #instructions {
+  height: 100px;
+  display: block;
+  margin: 0 auto 40px auto;
+}
+
+#start-screen p {
+  text-align: center;
+	margin: 10px;
+	color: rgba(225,225,225, 0.5);
 }
 
 #leaderboard {
@@ -87,6 +99,7 @@ canvas {
   color: rgba(225,225,225, 0.5);
   font-size: 0.9em;
   margin: 5px;
+	text-decoration: none;
 }
 
 #chatnon:hover {

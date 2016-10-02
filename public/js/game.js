@@ -99,6 +99,15 @@ function setKeys() {
   keys.shoot.onUp.add(emitShootStop, this);
 }
 
+function unsetKeys() {
+  keys.left = game.input.keyboard.removeKey(Phaser.Keyboard.A);
+  keys.right = game.input.keyboard.removeKey(Phaser.Keyboard.D);
+  keys.down = game.input.keyboard.removeKey(Phaser.Keyboard.S);
+  keys.up = game.input.keyboard.removeKey(Phaser.Keyboard.W);
+  keys.boost = game.input.keyboard.removeKey(Phaser.Keyboard.SHIFT);
+  keys.shoot = game.input.keyboard.removeKey(Phaser.Keyboard.SPACEBAR);
+}
+
 // Server input functions
 function emitLeftStart() {
   socket.emit('left', true);
@@ -144,7 +153,7 @@ function emitShootStart() {
   socket.emit('shoot', true);
 }
 
-function emitShootStop() { 
+function emitShootStop() {
   socket.emit('shoot', false);
 }
 

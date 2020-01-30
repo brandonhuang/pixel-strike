@@ -13,7 +13,7 @@
     "flightplan": "^0.6.13"
   },
   "scripts": {
-    "start": "nodemon server.js"
+    "start": "node server.js"
   },
   "engines": {
     "node": "6.7.0"
